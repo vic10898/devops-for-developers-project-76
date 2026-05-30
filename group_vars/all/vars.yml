@@ -9,11 +9,11 @@ redmine_db_host: rc1a-o0qmnm7or1c8dglq.mdb.yandexcloud.net
 redmine_db_port: 6432
 redmine_db_name: redmine
 redmine_db_user: redmine_user
-redmine_db_password: "{{ vault_redmine_db_password }}"
+redmine_db_password: "{{ vault_redmine_db_password | default('') }}"
 
 # Переменные для Datadog Agent
 datadog_site: "datadoghq.com"
-datadog_api_key: "{{ vault_datadog_api_key }}"
+datadog_api_key: "{{ vault_datadog_api_key | default('') }}"
 
 # Конфигурация интеграции http_check
 datadog_checks:
