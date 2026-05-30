@@ -1,0 +1,39 @@
+---
+- name: Создание директории для проекта Redmine
+  file:
+    path: /home/yc-user/redmine
+    state: directory
+    owner: yc-user
+    group: yc-user
+    mode: '0755'
+  tags: [deploy]
+
+- name: Генерация файла .env с переменными окружения
+  template:
+    src: .env.j2
+    dest: /home/yc-user/redmine/.env
+    owner: yc-user
+    group: yc-user
+    mode: '0600'
+  tags: [deploy]
+
+- name: Генерация файла docker-compose.yml
+  template:
+    src: docker-compose.yml.j2
+    dest: /home/yc-user/redmine/docker-compose.yml
+    owner: yc-user
+    group: yc-user
+    mode: '0644'
+  tags: [deploy]
+
+- name: Запуск контейнера Redmine через Docker Compose
+  command: docker compose up -d
+  args:
+    chdir: /home/yc-user/redmine
+  register: compose_up
+  tags: [deploy]
+
+- name: Вывод лога запуска
+  debug:
+    var: compose_up.stdout
+  tags: [deploy]
