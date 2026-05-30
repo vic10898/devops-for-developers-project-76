@@ -1,35 +1,35 @@
 ---
 - name: Создание директории для проекта Redmine
   file:
-    path: "{{ ansible_user_dir }}/redmine"
+    path: "{{ ansible_env.HOME }}/redmine"
     state: directory
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    owner: "{{ ansible_env.USER }}"
+    group: "{{ ansible_env.USER }}"
     mode: '0755'
   tags: [deploy]
 
 - name: Генерация файла .env с переменными окружения
   template:
     src: .env.j2
-    dest: "{{ ansible_user_dir }}/redmine/.env"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    dest: "{{ ansible_env.HOME }}/redmine/.env"
+    owner: "{{ ansible_env.USER }}"
+    group: "{{ ansible_env.USER }}"
     mode: '0600'
   tags: [deploy]
 
 - name: Генерация файла docker-compose.yml
   template:
     src: docker-compose.yml.j2
-    dest: "{{ ansible_user_dir }}/redmine/docker-compose.yml"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    dest: "{{ ansible_env.HOME }}/redmine/docker-compose.yml"
+    owner: "{{ ansible_env.USER }}"
+    group: "{{ ansible_env.USER }}"
     mode: '0644'
   tags: [deploy]
 
 - name: Запуск контейнера Redmine через Docker Compose
   command: docker compose up -d
   args:
-    chdir: "{{ ansible_user_dir }}/redmine"
+    chdir: "{{ ansible_env.HOME }}/redmine"
   register: compose_up
   tags: [deploy]
 
